@@ -1,0 +1,36 @@
+---
+title: "Demo"
+format: html
+execute: 
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| lable: setup
+#| include: false
+library(tidyverse)
+
+Time.in.Emergency.Dept.21 <- read.csv("/cloud/project/Time in Emergency Dept 21.csv")
+
+```
+
+* This is a demo text on R
+**This** is the second demo text on R
+
+## Data Visualisation Module
+### Dr Damien Dupre
+
+1.This is a test
+
+2.This is test2 
+
+- This ***is*** *test3*
+
+
+```{r}
+ggplot(Time.in.Emergency.Dept.21, aes(Day, Age)) +
+geom_boxplot()
+
+```
