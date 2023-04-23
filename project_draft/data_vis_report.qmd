@@ -1,0 +1,225 @@
+---
+title: "MT5000 R Assignment - Milind Ramanna Kumbhar - 22267421"
+format: html
+execute: 
+  echo: false
+  warning: false
+  message: false
+---
+
+
+```{r}
+library(png)
+
+# Read PNG image file
+image <- readPNG("unicef.png")
+
+# Display the image
+plot(0, 0, type = "n", xlim = c(0, 1), ylim = c(0, 1), xaxt = "n", yaxt = "n", ann = FALSE)
+rasterImage(image, 0, 0, 1, 1)
+
+
+```
+
+## Introduction
+
+We present the data in various analyses providing valuable insights into the economic, demographic, and health trends in India and around the world. The world map of global economic indicators and the visualization of the top 10 countries with the highest GDP provide a quick and effective way to compare and contrast the economic performance of different countries. Then we explore and analyse the data sets which offer a comprehensive understanding of the various factors shaping India's development and highlight the need for continued efforts to address these challenges.
+
+
+## Global Economic Indicators: A World Map View of GDP, Population, and Inflation
+
+The world map showcases a comprehensive view of global economic indicators. Each country is represented by a blue dot, representing essential economic data such as the Country Name, GDP, Population, and Inflation. This offers an effective way to visualize the economic landscape of different countries and regions, allowing us to compare and contrast the economic performance at a glance. It also provides valuable insights for policymakers, investors, and businesses seeking to understand the economic situation of various countries and make informed decisions accordingly.
+
+
+
+```{r}
+# Load required packages
+library(plotly)
+library(readr)
+
+# Read the CSV file into a data frame
+data <- read_csv("unicef_metadata1.csv")
+
+# Create an interactive world map with plotly
+plot_ly(data, type = "scattergeo", 
+        locations = ~alpha_3_code, 
+        hoverinfo = "text", 
+        text = ~paste("Country: ", country, "<br>",
+                      "Population: ", population, "<br>",
+                      "GDP: $", gdp, "<br>",
+                      "Inflation: ", inflation, "%"), 
+        marker = list(size = 10, color = "blue")) %>%
+  layout(title = "Economic Analysis: World Map", 
+         geo = list(showcountries = TRUE))
+
+```
+
+## Top 10 Countries with the Highest GDP: A Visual Representation
+
+The plot showcases the top 10 countries in the world with the highest Gross Domestic Product (GDP). According to the graph, Monaco takes the first spot, followed by Luxembourg in second place, and Bermuda in third place. While Qatar and the United States of America rank ninth and tenth, respectively. The visual representation of this data provides a quick and straightforward way to compare the economic performance of different countries and highlights the economic dominance of certain regions in the world. 
+
+```{r}
+library(dplyr)
+library(ggplot2)
+
+# Load data
+unicef_data <- read.csv("unicef_metadata1.csv")
+
+# Select the top 10 countries based on GDP
+top_gdp <- unicef_data %>%
+  filter(year == 2020) %>%
+  arrange(desc(gdp)) %>%
+  head(10)
+
+# Create the Lollipop chart
+ggplot(top_gdp, aes(x = reorder(country, -gdp), y = gdp, color = country)) +
+  geom_segment(aes(xend = country, yend = 0)) +
+  geom_point(size = 3) +
+  scale_color_discrete(guide = FALSE ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1)) +
+  labs(title = "Top 10 countries by GDP in 2020", x = "Country", y = "GDP (in billions)")
+
+```
+
+# Population Growth in India: A Decades-Long Trend
+
+The data set shows the population of India from 1960 to 2021. From the data, it is evident that the population of India has been steadily increasing over the years. In 1960, the population was 445,954,579, and by 2021 it had reached 1.4 billion. The growth rate of the population was relatively slow in the 1960s, but it picked up in the 1970s and has remained high ever since. It is also notable that the population growth rate has been declining in recent years. While the population increased by 1.3% from 2019 to 2020, it increased by only 0.9% from 2020 to 2021. The increasing population puts pressure on the country's resources, including land, water, and energy, and presents significant challenges for the Indian government in terms of providing education, healthcare, and employment opportunities to the growing population.
+
+```{r}
+# Load the necessary libraries
+library(ggplot2)
+library(dplyr)
+library(scales)
+
+# Load the data from the CSV file
+data <- read.csv("unicef_metadata1.csv")
+
+# Filter the data to only include India
+india_data <- filter(data, country == "India")
+
+# Create the line chart
+ggplot(india_data, aes(x = year)) +
+  geom_line(aes(y = population, color = "Population")) +
+  scale_color_manual(name = "Variable",values = c("Population" = "red")) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Population trend in India",
+       x = "Year",
+       y = "Population") +
+  theme_minimal()
+
+```
+# Analysis of India's GDP and Inflation Trends from 1960 to 2021
+
+A scatter plot with linear regression is created using the GDP and Inflation data for India from 1960 to 2021. The plot shows a general negative correlation between GDP and Inflation, indicating that as GDP increases, inflation also tends to decrease. The linear regression line shows a slight negative slope, indicating a negative correlation between GDP and Inflation, but the correlation is weak. Additionally, the data points are widely spread out, indicating that there is a lot of variation in the data and that other factors may be influencing the relationship between GDP and Inflation.
+
+```{r}
+library(ggplot2)
+
+# Load data
+data <- read.csv("unicef_metadata1.csv")
+
+# Filter data for India only
+aus_data <- data[data$country == "India",]
+
+# Create scatterplot with linear regression line
+ggplot(aus_data, aes(x = gdp, y = inflation)) +
+  geom_point(aes(color = "GDP"), size = 3) +
+  geom_smooth(aes(color = "Inflation"), method = "lm", se = FALSE) +
+  scale_color_manual(name = "Variable", values = c("GDP" = "orange", "Inflation" = "green")) +
+  labs(title = "Inflation vs. GDP for India",
+       x = "GDP", y = "Inflation")
+
+```
+
+# Analysis of India's Population, GDP, and Life Expectancy Over Time
+
+India's population has steadily increased over the years, reaching 1.4 billion in 2021. The country's GDP has also shown steady growth, with an increase from 305.8 billion in 1960 to 1.9 trillion in 2019. However, there was a significant drop in GDP in 2020, possibly due to the COVID-19 pandemic. Life expectancy in India has improved, rising from 45.2 years in 1960 to 70.9 years in 2019. This increase can be attributed to advancements in healthcare and nutrition. However, India still lags behind many developed nations in terms of life expectancy. The data also shows that GDP growth has not always been accompanied by an increase in life expectancy. Therefore, while economic growth is important, a focus on improving healthcare and nutrition is also necessary to further improve the standard of living in India.
+
+```{r}
+library(ggpubr)
+
+# Load data from CSV file
+data <- read.csv("unicef_metadata1.csv")
+
+# Filter data for India
+india_data <- filter(data, country == "India")
+
+# Grouped Scatter plot with marginal density plots for India
+ggscatterhist(
+  india_data, x = "population", y = "life", color = "gdp",
+  size = 3, alpha = 0.6, margin.params = list(fill = "gdp", color = "black", size = 0.2)
+)
+
+```
+
+# BMI-for-Age in India: A Look at Trends from 2006 to 2015
+
+The data provided shows the BMI-for-age among children under 5 years old in India between 2006 and 2015, with values falling between -2 SD and ≥ -3 SD. The observations were split by sex, with data available for females, males, and the total population.
+
+Overall, the data indicate that there was a slight increase in BMI for age from 2006 to 2015, with the average increasing from 10.9 to 11.2 for all categories. When looking at the data by sex, both females and males had a similar increase in BMI-for-age from 2006 to 2015. The BMI-for-age values for females were slightly lower than for males in both years.
+
+These results suggest that while there has been a small increase in BMI-for-age in India over the last decade, there is still room for improvement to ensure that children are receiving the necessary nutrition and care to grow and develop properly. Further research and analysis could be conducted to explore potential factors influencing these trends and identify strategies for promoting healthy growth among children in India.
+
+
+```{r}
+library(ggpubr)
+library(dplyr)
+
+# Load data
+unicef_data <- read.csv("unicef_indicator_2.csv")
+
+# Choose a specific country
+selected_country <- "India"
+data_country <- unicef_data %>% filter(country == selected_country)
+
+# Filter the data to show only male and female values
+data_country <- data_country %>% filter(sex %in% c("Male", "Female"))
+
+# Grouped Scatter plot with marginal density plots for sex column
+ggscatterhist(
+  data_country, x = "time_period", y = "obs_value",
+  color = "sex", size = 3, alpha = 0.6,
+  palette = c("#00AFBB", "#E7B800"),
+  margin.params = list(fill = "sex", color = "black", size = 0.2)
+)
+
+```
+
+# Proportion of Population with Access to Treated Sewage in India
+
+The data shows the proportion of the Indian population with access to sanitation facilities connected to sewer networks and with sewage treated to at least secondary levels from 2000 to 2020. The proportion has increased steadily from 1.47% in 2000 to 3.96% in 2020, with a particularly sharp increase between 2009 and 2015. Despite the progress, however, the proportion is still quite low, indicating that a large proportion of the population in India still lacks access to safe and adequate sanitation facilities. This data highlights the need for continued efforts to improve access to sanitation in India, particularly in rural areas and among marginalized communities.
+
+```{r}
+library(ggplot2)
+library(dplyr)
+
+# Read data from file
+unicef_data <- read.csv("unicef_indicator_1.csv")
+
+# Filter data for India
+data_india <- unicef_data %>% filter(country == "India")
+
+# Plot bar chart
+ggplot(data_india, aes(x = time_period, y = obs_value)) +
+  geom_bar(stat = "identity", fill = "blue") +
+  labs(title = "Proportion of Population with Access to Treated Sewage",
+       x = "Time",
+       y = "Level")
+
+```
+
+## Conclusion
+
+India faces a significant challenge with its growing population, which has been steadily increasing over the years. The population growth may put pressure on the country's resources, including land, water, and energy, and presents significant challenges for the Indian government in terms of providing education, healthcare, and employment opportunities to the growing population. India's GDP has shown steady growth, with an increase from 305.8 billion in 1960 to 1.9 trillion in 2019, there is still room for improvement, however, with limited data it is difficult to recommend. The BMI-for-age data indicate that there has been a slight increase in BMI-for-age in India over the last decade, but there is still room for improvement to ensure that children are receiving the necessary nutrition and care to grow and develop properly. The proportion of the Indian population with access to sanitation facilities connected to sewer networks and with sewage treated to at least secondary levels has increased steadily from 1.47% in 2000 to 3.96% in 2020, indicating the need for continued efforts to improve access to sanitation in India. Overall, with limited data in place, we can say that India needs to focus on sustainable development and address the challenges associated with population growth to ensure a better future for its citizens.
+
+
+
+
+
+
+
+
+
+
+
